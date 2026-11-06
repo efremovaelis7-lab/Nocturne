@@ -6,10 +6,10 @@
 
 ## Скачать
 
-Готовые архивы лежат в разделе **[Releases](../../releases/latest)**:
+- **Mac** — [NOCTURNE_Mac_beta_RC3.8.20_beta.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Mac_beta_RC3.8.20_beta.zip). Для macOS 12 и новее, для Mac с процессорами Apple (M1–M4) и Intel.
+- **Windows** — [NOCTURNE_Windows_beta_RC3.8.20.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Windows_beta_RC3.8.20.zip). Для Windows 10 и 11.
 
-- `NOCTURNE_Mac_beta_RC3.8.20_beta.zip` — для macOS 12 и новее, для Mac с процессорами Apple (M1–M4) и Intel;
-- `NOCTURNE_Windows_beta_RC3.8.20.zip` — для Windows 10 и 11.
+Что нового в этой версии и контрольные суммы — в [downloads/README.md](downloads/README.md).
 
 В каждом архиве есть инструкция по установке. Программы пока не подписаны платным сертификатом, поэтому при первом запуске macOS и Windows покажут предупреждение. Как его пройти, написано в инструкции.
 
@@ -30,6 +30,7 @@ NOCTURNE работает без интернета и никуда не отп�
 | `desktop/mac/` | Окно для Mac (C и Objective-C, WKWebView), меню, иконка, `Info.plist`. |
 | `desktop/tools/` | Иконка для Windows и проверка готового `.exe`. |
 | `fonts-licenses/` | Лицензии встроенных шрифтов. |
+| `downloads/` | Готовые архивы для Mac и Windows. |
 
 ## Сборка
 
@@ -41,7 +42,7 @@ cd desktop
 ./build-mac.sh ../app ../build/mac       # NOCTURNE.app (Apple и Intel)
 ```
 
-`NOCTURNE.exe` и окно Mac из выпуска RC3.8.20 собираются из этого кода байт в байт. Контрольные суммы архивов SHA-256 указаны в описании выпуска.
+`NOCTURNE.exe` и окно Mac из выпуска RC3.8.20 собираются из этого кода байт в байт. Контрольные суммы SHA-256 архивов лежат в `downloads/SHA256SUMS.txt`.
 
 ## Авторские права
 

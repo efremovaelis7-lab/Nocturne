@@ -1,0 +1,2 @@
+98b789b31bde2492f4783f847eefcba7024ffec43fb68cfee275d44dd976341a  NOCTURNE_Mac_beta_RC3.8.20_beta.zip
+0561e79fe9347173d755cd5140d98097c3410bddcaeba01523ccdffbc9b0a81d  NOCTURNE_Windows_beta_RC3.8.20.zip
