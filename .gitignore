@@ -1,0 +1,6 @@
+# результаты сборки
+/build/
+desktop/cmd/nocturne-win/assets/
+desktop/cmd/nocturne-win/*.syso
+*.zip
+.DS_Store
