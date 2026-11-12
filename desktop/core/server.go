@@ -59,6 +59,7 @@ type Server struct {
 	lastBeat atomic.Int64
 	lastBye  atomic.Int64
 	closed   atomic.Bool
+	access   string // Android: secret the WebView sends as a cookie
 }
 
 var idRe = regexp.MustCompile(`^[\w-]{1,140}$`)
@@ -75,7 +76,7 @@ func New(opts Options) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	s := &Server{opts: opts, lock: lk, revision: 1}
+	s := &Server{opts: opts, lock: lk, revision: 1, access: accessToken()}
 	s.cfg = readConfig()
 	if err := os.MkdirAll(s.cfg.DataDir, 0o700); err != nil {
 		lk.release()
@@ -231,6 +232,10 @@ func (s *Server) handler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		host := r.Host
 		if host != "127.0.0.1:"+strconv.Itoa(s.port) && host != "localhost:"+strconv.Itoa(s.port) {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+		if !s.allowed(r) {
 			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}

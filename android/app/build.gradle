@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.application'
+}
+
+// The permanent signing key comes from GitHub secrets (see android/README.md).
+// Without it the APK is signed with a temporary debug key: fine for a test,
+// but a newer build signed differently will not install over it.
+def keystoreFile = System.getenv('NOCTURNE_KEYSTORE_FILE')
+
+android {
+    namespace 'ru.levinskaya.nocturne'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'ru.levinskaya.nocturne'
+        minSdk 26
+        targetSdk 35
+        versionCode((System.getenv('NOCTURNE_VERSION_CODE') ?: '1') as int)
+        versionName(System.getenv('NOCTURNE_VERSION_NAME') ?: '1.0 RC3.8.20 Android')
+    }
+
+    signingConfigs {
+        if (keystoreFile) {
+            release {
+                storeFile file(keystoreFile)
+                storePassword System.getenv('NOCTURNE_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('NOCTURNE_KEY_ALIAS')
+                keyPassword System.getenv('NOCTURNE_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig keystoreFile ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // libnocturne.so is the library server (a Go program, not a real library).
+    // Android only lets apps run programs from the native library folder, so it
+    // must be unpacked there on install.
+    packaging {
+        jniLibs {
+            useLegacyPackaging true
+            // it is a program, already stripped: leave it exactly as built
+            keepDebugSymbols += ['**/libnocturne.so']
+        }
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}

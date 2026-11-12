@@ -1,0 +1,108 @@
+# Builds NOCTURNE for Android on GitHub's computers (they have the Android SDK)
+# and publishes the APK on the "android-test" release page.
+name: Android
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - 'app/**'
+      - 'desktop/**'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.x'
+          cache: false
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Library server and interface
+        run: bash android/build-android.sh 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      - name: Signing key
+        env:
+          KEYSTORE_B64: ${{ secrets.NOCTURNE_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/nocturne.jks"
+            echo "NOCTURNE_KEYSTORE_FILE=$RUNNER_TEMP/nocturne.jks" >> "$GITHUB_ENV"
+            echo "SIGNED=permanent" >> "$GITHUB_ENV"
+            echo "Подпись: постоянный ключ" | tee -a "$RUNNER_TEMP/build.log"
+          else
+            echo "SIGNED=temporary" >> "$GITHUB_ENV"
+            echo "::warning::Нет постоянного ключа подписи — APK подписан временным ключом"
+            echo "Подпись: временный ключ" | tee -a "$RUNNER_TEMP/build.log"
+          fi
+
+      - name: APK
+        working-directory: android
+        env:
+          NOCTURNE_KEYSTORE_PASSWORD: ${{ secrets.NOCTURNE_KEYSTORE_PASSWORD }}
+          NOCTURNE_KEY_ALIAS: ${{ secrets.NOCTURNE_KEY_ALIAS }}
+          NOCTURNE_KEY_PASSWORD: ${{ secrets.NOCTURNE_KEY_PASSWORD }}
+          NOCTURNE_VERSION_CODE: ${{ github.run_number }}
+        run: |
+          ver=$(grep -o 'Version = "[^"]*"' ../desktop/core/paths.go | cut -d'"' -f2 | sed 's/ beta$//')
+          export NOCTURNE_VERSION_NAME="$ver Android (сборка ${{ github.run_number }})"
+          ./gradlew --no-daemon --stacktrace assembleRelease 2>&1 | tee -a "$RUNNER_TEMP/build.log"
+          mkdir -p ../out
+          rc=$(echo "$ver" | grep -o 'RC[0-9.]*' || echo test)
+          cp app/build/outputs/apk/release/app-release.apk "../out/NOCTURNE_Android_${rc}_build${{ github.run_number }}.apk"
+          ls -la ../out
+
+      - name: Release page
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=android-test
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" --target "${{ github.sha }}" --prerelease \
+              --title "NOCTURNE для Android — тестовая сборка" \
+              --notes-file android/RELEASE_NOTES.md
+          else
+            gh release edit "$tag" --notes-file android/RELEASE_NOTES.md
+          fi
+          for a in $(gh release view "$tag" --json assets -q '.assets[].name'); do
+            gh release delete-asset "$tag" "$a" -y
+          done
+          gh release upload "$tag" out/*.apk --clobber
+
+      # The build log (and the APK) also go to the "android-builds" branch, so
+      # they can be read without signing in to GitHub.
+      - name: Build log
+        if: always()
+        run: |
+          d="$RUNNER_TEMP/builds"; mkdir -p "$d"; cd "$d"
+          git init -q -b android-builds
+          cp "$RUNNER_TEMP/build.log" . 2>/dev/null || echo "нет журнала" > build.log
+          cp "$GITHUB_WORKSPACE"/out/*.apk . 2>/dev/null || true
+          printf '%s\n%s\n%s\n' "commit ${{ github.sha }}" "run ${{ github.run_number }}" "status ${{ job.status }}" > STATUS
+          git add -A
+          git -c user.name="github-actions" -c user.email="github-actions@users.noreply.github.com" commit -qm "Сборка ${{ github.run_number }}: ${{ job.status }}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:android-builds

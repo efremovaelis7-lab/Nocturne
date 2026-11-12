@@ -19,7 +19,10 @@ window.__nocturneMessages = [];
 function key(){ return (window.__NOCTURNE_BOOT && window.__NOCTURNE_BOOT.key) || ''; }
 function post(msg){
   try { window.webkit.messageHandlers.nocturne.postMessage(msg); return true; }
-  catch (e) { window.__nocturneMessages.push(msg); return false; }
+  catch (e) {
+    try { if (window.NocturneAndroid) { window.NocturneAndroid.postMessage(JSON.stringify(msg)); return true; } } catch (e2) {}
+    window.__nocturneMessages.push(msg); return false;
+  }
 }
 function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 var toastTimer = null;
@@ -72,7 +75,10 @@ window.__nocturneBeforeQuit = function(){
   return true;
 };
 
-if (N.platform === 'mac' || N.platform === 'windows') {
+if (N.platform === 'mac' || N.platform === 'windows' || N.platform === 'android') {
+  // Android: the file lands in the app's own folder, then the app asks
+  // where to put it (the system "Save" screen).
+  var savedTo = N.platform === 'android' ? 'готов — выбери, куда его сохранить' : 'сохранён в папку «Загрузки»';
   // Full archives can be gigabytes (music). The server writes them straight
   // into Downloads; the page only receives an empty ZIP as a placeholder,
   // which is recognised below and turned into a rename of the real file.
@@ -122,7 +128,7 @@ if (N.platform === 'mac' || N.platform === 'windows') {
         var xx = await rr.json().catch(function(){ return {}; });
         var finalName = rr.ok ? xx.name : a.name, finalPath = rr.ok ? xx.path : a.path;
         post({type: 'downloaded', path: finalPath, name: finalName});
-        say('Архив «' + finalName + '» (' + fmtSize(a.size || 0) + ') сохранён в папку «Загрузки»');
+        say('Архив «' + finalName + '» (' + fmtSize(a.size || 0) + ') ' + savedTo);
         return;
       }
       var r = await nativeFetch('/api/native/download?name=' + encodeURIComponent(name || 'NOCTURNE'), {
@@ -131,7 +137,7 @@ if (N.platform === 'mac' || N.platform === 'windows') {
       var x = await r.json().catch(function(){ return {}; });
       if (!r.ok) throw new Error(x.error || ('HTTP ' + r.status));
       post({type: 'downloaded', path: x.path, name: x.name});
-      say('Файл «' + x.name + '» сохранён в папку «Загрузки»');
+      say('Файл «' + x.name + '» ' + savedTo);
     } catch (e) {
       // RC3.8.11: when the app does not answer (the copy is needed most then),
       // Edge saves the file itself into "Загрузки".
@@ -245,7 +251,7 @@ window.addEventListener('click', function(e){
   var b = e.target && e.target.closest ? e.target.closest('[data-act="quit"]') : null;
   if (!b) return;
   e.preventDefault(); e.stopImmediatePropagation();
-  if (N.platform === 'mac') post({type: 'quit'}); else windowsQuit();
+  if (N.platform === 'mac' || N.platform === 'android') post({type: 'quit'}); else windowsQuit();
 }, true);
 
 if (N.platform === 'windows') {

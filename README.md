@@ -23,13 +23,14 @@ NOCTURNE работает без интернета и никуда не отп�
 
 | Папка | Что внутри |
 |---|---|
-| `app/` | Интерфейс программы: `index.html` и `app.js`. Один и тот же для Mac и Windows. |
+| `app/` | Интерфейс программы: `index.html` и `app.js`. Один и тот же для Mac, Windows и Android. |
 | `desktop/core/` | Сервер библиотеки на Go (только стандартная библиотека): чтение и сохранение `library.json`, резервные копии, архивы, музыка. |
 | `desktop/cmd/nocturne-server/` | Сервер для окна Mac. |
 | `desktop/cmd/nocturne-win/` | Программа для Windows: запускает сервер и открывает окно через Microsoft Edge. |
 | `desktop/mac/` | Окно для Mac (C и Objective-C, WKWebView), меню, иконка, `Info.plist`. |
 | `desktop/tools/` | Иконка для Windows и проверка готового `.exe`. |
 | `fonts-licenses/` | Лицензии встроенных шрифтов. |
+| `android/` | Приложение для Android (тестовая сборка): окно WebView и тот же сервер библиотеки. Подробнее — в [android/README.md](android/README.md). |
 | `downloads/` | Готовые архивы для Mac и Windows. |
 
 ## Сборка

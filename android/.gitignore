@@ -1,0 +1,9 @@
+# built by build-android.sh from desktop/ and app/
+app/src/main/jniLibs/
+app/src/main/assets/
+.gradle/
+build/
+app/build/
+local.properties
+*.jks
+*.keystore
