@@ -6,8 +6,8 @@
 
 ## Скачать
 
-- **Mac** — [NOCTURNE_Mac_beta_RC3.8.20_beta.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Mac_beta_RC3.8.20_beta.zip). Для macOS 12 и новее, для Mac с процессорами Apple (M1–M4) и Intel.
-- **Windows** — [NOCTURNE_Windows_beta_RC3.8.20.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Windows_beta_RC3.8.20.zip). Для Windows 10 и 11.
+- **Mac** — [NOCTURNE_Mac_beta_RC3.8.21_beta.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Mac_beta_RC3.8.21_beta.zip). Для macOS 12 и новее, для Mac с процессорами Apple (M1–M4) и Intel.
+- **Windows** — [NOCTURNE_Windows_beta_RC3.8.21.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Windows_beta_RC3.8.21.zip). Для Windows 10 и 11.
 
 Что нового в этой версии и контрольные суммы — в [downloads/README.md](downloads/README.md).
 
@@ -48,7 +48,7 @@ cd desktop
 ./build-mac.sh ../app ../build/mac       # NOCTURNE.app (Apple и Intel)
 ```
 
-`NOCTURNE.exe` и окно Mac из выпуска RC3.8.20 собираются из этого кода байт в байт. Контрольные суммы SHA-256 архивов лежат в `downloads/SHA256SUMS.txt`.
+`NOCTURNE.exe`, окно Mac и сервер библиотеки из выпуска RC3.8.21 собираются из этого кода байт в байт. Контрольные суммы SHA-256 архивов лежат в `downloads/SHA256SUMS.txt`.
 
 ## Авторские права
 

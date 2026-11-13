@@ -26,7 +26,7 @@ import (
 
 // YandexClientID is the NOCTURNE app registered at oauth.yandex.ru. It is not
 // a secret. NOCTURNE_YANDEX_CLIENT_ID overrides it (tests).
-var YandexClientID = ""
+var YandexClientID = "b571af05b0c640ac8875c89dc5c5a343"
 
 const yandexAPIDefault = "https://cloud-api.yandex.net"
 

@@ -1,15 +1,23 @@
-# NOCTURNE 1.0 RC3.8.20 (бета)
+# NOCTURNE 1.0 RC3.8.21 (бета)
 
 Бета-версия писательской мастерской NOCTURNE для Mac и Windows.
 
 ## Что скачать
 
-- **Mac** (macOS 12 и новее, процессоры Apple и Intel): [NOCTURNE_Mac_beta_RC3.8.20_beta.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Mac_beta_RC3.8.20_beta.zip)
-- **Windows** (Windows 10 и 11): [NOCTURNE_Windows_beta_RC3.8.20.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Windows_beta_RC3.8.20.zip)
+- **Mac** (macOS 12 и новее, процессоры Apple и Intel): [NOCTURNE_Mac_beta_RC3.8.21_beta.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Mac_beta_RC3.8.21_beta.zip)
+- **Windows** (Windows 10 и 11): [NOCTURNE_Windows_beta_RC3.8.21.zip](https://github.com/efremovaelis7-lab/Nocturne/raw/main/downloads/NOCTURNE_Windows_beta_RC3.8.21.zip)
 
 Архив нужно распаковать, внутри лежит инструкция. Программа пока не подписана платным сертификатом, поэтому при первом запуске система покажет предупреждение. Как его пройти, написано в инструкции.
 
 Если NOCTURNE уже стоит, книги никуда не денутся: они хранятся отдельно от программы, в папке «Документы → NOCTURNE». Новую версию достаточно поставить поверх старой.
+
+## Что нового в RC3.8.21
+
+- **Компьютер и телефон — синхронизация через свой Яндекс Диск.** «Настройки и данные» → «Яндекс Диск». Общая копия библиотеки (без музыки) хранится на собственном Диске, в папке «Приложения → NOCTURNE»: остальной Диск программа не видит, на серверы разработчика ничего не уходит. Бесплатно. Если одну и ту же главу правили на двух устройствах между синхронизациями, сохраняются обе версии.
+- **Архив для переноса:** вся библиотека без музыки одним небольшим файлом. На другом устройстве книги заменятся, а музыка и размер шрифта останутся свои.
+- **Обновить книгу из файла:** если выгруженная книга уже есть в библиотеке, импорт предложит заменить её новой версией. Прежняя версия уходит в корзину.
+- Защитная копия перед импортом теперь без музыки — импорт музыку не удаляет.
+- Путеводитель: раздел «Телефон и второй компьютер».
 
 ## Что нового в версиях RC3.8
 
@@ -31,8 +39,8 @@
 SHA-256 (тот же список лежит в файле `SHA256SUMS.txt`):
 
 ```
-98b789b31bde2492f4783f847eefcba7024ffec43fb68cfee275d44dd976341a  NOCTURNE_Mac_beta_RC3.8.20_beta.zip
-0561e79fe9347173d755cd5140d98097c3410bddcaeba01523ccdffbc9b0a81d  NOCTURNE_Windows_beta_RC3.8.20.zip
+f552864b83d47751f93388f406421b285f63b4667440faa586c42ab1e63b9c59  NOCTURNE_Mac_beta_RC3.8.21_beta.zip
+a49f8fb39ad41c2e312f76b96fde1bbf00e14691421aa3aa1e9c1a10834dfc99  NOCTURNE_Windows_beta_RC3.8.21.zip
 ```
 
 © 2026 Елизавета Левинская. Все права защищены.
