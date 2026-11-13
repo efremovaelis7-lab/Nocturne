@@ -5757,6 +5757,11 @@ function ncMenuSetup(){
  body.nc-nav-open .shell>.sidebar .sidebottom{display:grid!important}
  body.nc-nav-open .shell>.sidebar .identity{padding-left:16px;padding-right:70px}
  body.nc-nav-open #ncMenuBtn{left:min(calc(330px - 58px),calc(86vw - 58px));right:auto}
+ /* кнопки «Свой фон / Покрытие» в шапке главной — под текстом, а не поверх него */
+ .hero{flex-wrap:wrap!important}
+ .hero .hero-custom-controls{position:relative!important;z-index:2;inset:auto!important;transform:none!important;display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;flex:0 0 100%;max-width:100%}
+ /* сжатый значок дневной нормы в верхней строке только мешал хлебным крошкам */
+ .topbar .goal-mini,.topbar .active-story-badge{display:none!important}
 }`;
  document.head.appendChild(st);
  const btn=document.createElement('button');btn.type='button';btn.id='ncMenuBtn';btn.setAttribute('aria-label','Меню');btn.title='Меню';btn.textContent='☰';

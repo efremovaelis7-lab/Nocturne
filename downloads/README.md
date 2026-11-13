@@ -40,8 +40,8 @@
 SHA-256 (тот же список лежит в файле `SHA256SUMS.txt`):
 
 ```
-805bce891163be69a1e12325cc69c5ecbb24a3aab4428c33e500ef95833cb24a  NOCTURNE_Mac_beta_RC3.8.21_beta.zip
-322bd31f3a236d25752e41ba71885a0299698cbe05ae5719fb84b23d0dcdeb89  NOCTURNE_Windows_beta_RC3.8.21.zip
+97305d46ec47105d47a7d8b811ee5a4ac2053a5b327081ab89db694533b81baa  NOCTURNE_Mac_beta_RC3.8.21_beta.zip
+b374304b69f09564c559fc635f6cc9d1b920d40b1b8d94cd16ded8b4c82bcebb  NOCTURNE_Windows_beta_RC3.8.21.zip
 ```
 
 © 2026 Елизавета Левинская. Все права защищены.
