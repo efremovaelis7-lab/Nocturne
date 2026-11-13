@@ -48,12 +48,21 @@ jobs:
       - name: Signing key
         env:
           KEYSTORE_B64: ${{ secrets.NOCTURNE_KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.NOCTURNE_KEYSTORE_PASSWORD }}
         run: |
           if [ -n "$KEYSTORE_B64" ]; then
             echo "$KEYSTORE_B64" | tr -d ' \r\n' | base64 -d > "$RUNNER_TEMP/nocturne.p12"
             echo "NOCTURNE_KEYSTORE_FILE=$RUNNER_TEMP/nocturne.p12" >> "$GITHUB_ENV"
             echo "SIGNED=permanent" >> "$GITHUB_ENV"
             echo "Подпись: постоянный ключ" | tee -a "$RUNNER_TEMP/build.log"
+            # проверка без раскрытия пароля: только длина и подходит ли он
+            pw=$(printf '%s' "$KEYSTORE_PASSWORD" | tr -d ' \r\n\t')
+            echo "Файл ключа: $(stat -c%s "$RUNNER_TEMP/nocturne.p12") байт (ожидается 4316); пароль в секрете: ${#KEYSTORE_PASSWORD} знаков, без пробелов и переводов строк ${#pw} (ожидается 32)" | tee -a "$RUNNER_TEMP/build.log"
+            if keytool -list -storetype PKCS12 -keystore "$RUNNER_TEMP/nocturne.p12" -storepass "$pw" >/dev/null 2>&1; then
+              echo "Пароль подходит к ключу" | tee -a "$RUNNER_TEMP/build.log"
+            else
+              echo "Пароль НЕ подходит к ключу" | tee -a "$RUNNER_TEMP/build.log"
+            fi
           else
             echo "SIGNED=temporary" >> "$GITHUB_ENV"
             echo "::warning::Нет постоянного ключа подписи — APK подписан временным ключом"
