@@ -109,6 +109,8 @@ if (N.platform === 'mac' || N.platform === 'windows' || N.platform === 'android'
   window.confirm = function(message){
     var text = String(message == null ? '' : message);
     if (nativeArchiveSize) text = text.replace(/Защитная копия \(\d+ КБ\)/, 'Защитная копия (' + fmtSize(nativeArchiveSize) + ')');
+    // Android: the copy is not in "Загрузки" yet — the system "Save" screen opens on top of this question.
+    if (N.platform === 'android') text = text.replace('отправлена в Загрузки. Убедись, что файл действительно скачался.', 'готова. Сохрани её в окне Android, которое откроется поверх (в «Загрузки» или в облако), и вернись сюда.');
     return nativeConfirm(text);
   };
   var isMarker = async function(blob){

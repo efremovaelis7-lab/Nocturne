@@ -5739,6 +5739,46 @@ document.addEventListener('change',async e=>{
  if(!e.target.matches?.('[data-nc-sync-auto]'))return;
  try{const m=JSON.parse(JSON.stringify(await ncSyncMeta()));m.auto=e.target.checked;await ncSyncSaveMeta(m);notify(m.auto?'Буду синхронизировать само':'Только по кнопке')}catch(err){notify('Не получилось: '+err.message)}
 });
+
+/* узкий экран (телефон, узкое окно < 851 px): раньше меню просто пряталось; теперь — кнопка ☰,
+   меню выезжает слева поверх страницы, закрывается выбором раздела, тенью, Esc или «Назад» на Android */
+function ncMenuSetup(){
+ if(document.querySelector('#ncMenuBtn'))return;
+ const st=document.createElement('style');st.id='nc-narrow-menu';
+ st.textContent=`#ncMenuBtn,#ncMenuVeil{display:none}
+@media(max-width:850px){
+ #ncMenuBtn{display:flex;align-items:center;justify-content:center;position:fixed;top:10px;right:12px;z-index:1001;width:46px;height:46px;border-radius:14px;border:1px solid var(--frame);background:color-mix(in srgb,var(--side) 92%,transparent);backdrop-filter:blur(10px);color:var(--accent);font-size:22px;line-height:1;box-shadow:0 6px 20px #0006;cursor:pointer}
+ body.writer-zen #ncMenuBtn{display:none}
+ .sidebar .identity{padding-right:70px}
+ body.nc-nav-open{overflow:hidden}
+ body.nc-nav-open #ncMenuVeil{display:block;position:fixed;inset:0;z-index:999;background:#070604a8;backdrop-filter:blur(3px)}
+ body.nc-nav-open .shell>.sidebar{position:fixed!important;top:0;left:0;bottom:0;width:min(330px,86vw)!important;height:auto!important;z-index:1000;display:flex!important;flex-direction:column;overflow:hidden!important;box-shadow:0 0 70px #000d;border-right:1px solid var(--frame)}
+ body.nc-nav-open .shell>.sidebar .sidescroll{display:block!important;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+ body.nc-nav-open .shell>.sidebar .sidebottom{display:grid!important}
+ body.nc-nav-open .shell>.sidebar .identity{padding-right:16px}
+ body.nc-nav-open #ncMenuBtn{left:min(calc(330px - 58px),calc(86vw - 58px));right:auto}
+}`;
+ document.head.appendChild(st);
+ const btn=document.createElement('button');btn.type='button';btn.id='ncMenuBtn';btn.setAttribute('aria-label','Меню');btn.title='Меню';btn.textContent='☰';
+ const veil=document.createElement('div');veil.id='ncMenuVeil';
+ document.body.append(veil,btn);
+ btn.addEventListener('click',()=>ncMenu(!document.body.classList.contains('nc-nav-open')));
+ veil.addEventListener('click',()=>ncMenu(false));
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('nc-nav-open'))ncMenu(false)});
+ // выбор раздела, книги или вселенной закрывает меню
+ document.addEventListener('click',e=>{
+  if(!document.body.classList.contains('nc-nav-open'))return;
+  const t=e.target.closest?.('.sidebar [data-tab],.sidebar .navlink,.sidebar .s-book,.sidebar [data-open-book],.sidebar [data-open-world],.sidebar #ncHomeNav,.sidebar .identity,.sidebar .sidebottom .btn');
+  if(t)setTimeout(()=>ncMenu(false),0);
+ },true);
+}
+function ncMenu(open){
+ document.body.classList.toggle('nc-nav-open',!!open);
+ const b=document.querySelector('#ncMenuBtn');if(b){b.textContent=open?'✕':'☰';b.setAttribute('aria-expanded',open?'true':'false')}
+}
+// «Назад» на Android: сначала закрыть меню; true — кнопка обработана
+window.__ncBack=()=>{if(document.body.classList.contains('nc-nav-open')){ncMenu(false);return true}return false};
+try{ncMenuSetup()}catch(e){console.error('NOCTURNE: меню для узкого экрана',e)}
 /* ==== RC3.8.21 END ==== */
 })();
 

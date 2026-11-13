@@ -232,8 +232,17 @@ public class MainActivity extends Activity {
     @Override
     @SuppressWarnings("deprecation")
     public void onBackPressed() {
-        // Keep the app (and anything typed) as it is, like the Home button.
-        moveTaskToBack(true);
+        // First let the page close its menu; otherwise keep the app (and
+        // anything typed) as it is, like the Home button.
+        if (web == null || server == null) {
+            moveTaskToBack(true);
+            return;
+        }
+        web.evaluateJavascript("window.__ncBack?window.__ncBack():false", v -> {
+            if (!"true".equals(v)) {
+                moveTaskToBack(true);
+            }
+        });
     }
 
     private void flush() {
