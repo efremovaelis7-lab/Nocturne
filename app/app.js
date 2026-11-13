@@ -5740,22 +5740,22 @@ document.addEventListener('change',async e=>{
  try{const m=JSON.parse(JSON.stringify(await ncSyncMeta()));m.auto=e.target.checked;await ncSyncSaveMeta(m);notify(m.auto?'Буду синхронизировать само':'Только по кнопке')}catch(err){notify('Не получилось: '+err.message)}
 });
 
-/* узкий экран (телефон, узкое окно < 851 px): раньше меню просто пряталось; теперь — кнопка ☰,
+/* узкий экран (телефон, узкое окно < 851 px): раньше меню просто пряталось; теперь — кнопка ☰ слева вверху,
    меню выезжает слева поверх страницы, закрывается выбором раздела, тенью, Esc или «Назад» на Android */
 function ncMenuSetup(){
  if(document.querySelector('#ncMenuBtn'))return;
  const st=document.createElement('style');st.id='nc-narrow-menu';
  st.textContent=`#ncMenuBtn,#ncMenuVeil{display:none}
 @media(max-width:850px){
- #ncMenuBtn{display:flex;align-items:center;justify-content:center;position:fixed;top:10px;right:12px;z-index:1001;width:46px;height:46px;border-radius:14px;border:1px solid var(--frame);background:color-mix(in srgb,var(--side) 92%,transparent);backdrop-filter:blur(10px);color:var(--accent);font-size:22px;line-height:1;box-shadow:0 6px 20px #0006;cursor:pointer}
+ #ncMenuBtn{display:flex;align-items:center;justify-content:center;position:fixed;top:10px;left:12px;z-index:1001;width:46px;height:46px;border-radius:14px;border:1px solid var(--frame);background:color-mix(in srgb,var(--side) 92%,transparent);backdrop-filter:blur(10px);color:var(--accent);font-size:22px;line-height:1;box-shadow:0 6px 20px #0006;cursor:pointer}
  body.writer-zen #ncMenuBtn{display:none}
- .sidebar .identity{padding-right:70px}
+ .sidebar .identity{padding-left:70px}
  body.nc-nav-open{overflow:hidden}
  body.nc-nav-open #ncMenuVeil{display:block;position:fixed;inset:0;z-index:999;background:#070604a8;backdrop-filter:blur(3px)}
  body.nc-nav-open .shell>.sidebar{position:fixed!important;top:0;left:0;bottom:0;width:min(330px,86vw)!important;height:auto!important;z-index:1000;display:flex!important;flex-direction:column;overflow:hidden!important;box-shadow:0 0 70px #000d;border-right:1px solid var(--frame)}
  body.nc-nav-open .shell>.sidebar .sidescroll{display:block!important;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
  body.nc-nav-open .shell>.sidebar .sidebottom{display:grid!important}
- body.nc-nav-open .shell>.sidebar .identity{padding-right:16px}
+ body.nc-nav-open .shell>.sidebar .identity{padding-left:16px;padding-right:70px}
  body.nc-nav-open #ncMenuBtn{left:min(calc(330px - 58px),calc(86vw - 58px));right:auto}
 }`;
  document.head.appendChild(st);
