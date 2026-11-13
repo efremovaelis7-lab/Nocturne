@@ -9,8 +9,8 @@ export PATH=/usr/lib/llvm-18/bin:$PATH
 HERE="$(cd "$(dirname "$0")" && pwd)"
 SRC="${1:?resources folder}"
 OUT="${2:?output folder}"
-VERSION="${VERSION:-1.0 RC3.8.20 beta}"
-BUILD="${BUILD:-10400}"
+VERSION="${VERSION:-1.0 RC3.8.21 beta}"
+BUILD="${BUILD:-10500}"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 

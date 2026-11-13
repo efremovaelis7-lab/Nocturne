@@ -3,6 +3,9 @@ package ru.levinskaya.nocturne;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
+import android.net.ConnectivityManager;
+import android.net.LinkProperties;
+import android.net.Network;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Map;
@@ -97,6 +101,7 @@ final class LibraryServer {
         env.put("TMPDIR", ctx.getCacheDir().getAbsolutePath());
         env.put("NOCTURNE_ACCESS_TOKEN", token);
         env.put("NOCTURNE_TZ", TimeZone.getDefault().getID());
+        env.put("NOCTURNE_DNS", dnsServers(ctx));
         pb.directory(home);
         pb.redirectErrorStream(true);
         Process p = pb.start();
@@ -123,6 +128,27 @@ final class LibraryServer {
         }
         p.destroy();
         throw new IOException("Сервер библиотеки не ответил за 20 секунд");
+    }
+
+    /** The phone's DNS servers: the server needs them to reach Yandex Disk (sync). */
+    private static String dnsServers(Context ctx) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+            Network n = cm == null ? null : cm.getActiveNetwork();
+            LinkProperties lp = n == null ? null : cm.getLinkProperties(n);
+            if (lp != null) {
+                for (InetAddress a : lp.getDnsServers()) {
+                    if (sb.length() > 0) {
+                        sb.append(',');
+                    }
+                    sb.append(a.getHostAddress());
+                }
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "dns", e);
+        }
+        return sb.toString();
     }
 
     /** Stops the server; it finishes the request in progress first (SIGTERM). */

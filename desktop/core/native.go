@@ -95,7 +95,7 @@ if (N.platform === 'mac' || N.platform === 'windows' || N.platform === 'android'
     var method = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
     if (method === 'GET' && /^(https?:\/\/[^/]+)?\/api\/backup(\?|$)/.test(url)) {
       return (async function(){
-        var r = await nativeFetch('/api/native/backup', {method: 'POST', headers: {'X-Nocturne-Key': key()}});
+        var r = await nativeFetch('/api/native/backup' + (/[?&]music=0(&|$)/.test(url) ? '?music=0' : ''), {method: 'POST', headers: {'X-Nocturne-Key': key()}});
         if (!r.ok) return r;
         var x = await r.json();
         nativeArchive = {path: x.path, name: x.name, size: x.size, at: Date.now()};

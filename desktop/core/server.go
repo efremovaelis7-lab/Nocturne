@@ -229,6 +229,7 @@ func (s *Server) handler() http.Handler {
 	mux.HandleFunc("/api/native/log", s.nativeLog)
 	mux.HandleFunc("/api/native/rename", s.nativeRename)
 	mux.HandleFunc("/api/native/open-folder", s.openFolderHandler)
+	s.cloudRoutes(mux)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		host := r.Host
 		if host != "127.0.0.1:"+strconv.Itoa(s.port) && host != "localhost:"+strconv.Itoa(s.port) {
@@ -293,6 +294,14 @@ func windowsTexts(b []byte) []byte {
 	return []byte(t)
 }
 
+// androidTexts does the same for phones and tablets.
+func androidTexts(b []byte) []byte {
+	t := string(b)
+	t = strings.NewReplacer("на Mac", "на устройстве", "с Mac", "с устройства", "окне macOS", "окне Android").Replace(t)
+	t = cmdKeyRe.ReplaceAllString(t, "Ctrl+$1")
+	return []byte(t)
+}
+
 func (s *Server) homepage(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.Error(w, "404 page not found", http.StatusNotFound)
@@ -321,6 +330,8 @@ func (s *Server) homepage(w http.ResponseWriter, r *http.Request) {
 	}
 	if s.opts.Platform == "windows" {
 		html = string(windowsTexts([]byte(html)))
+	} else if s.opts.Platform == "android" {
+		html = string(androidTexts([]byte(html)))
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-store")
@@ -335,6 +346,8 @@ func (s *Server) appJS(w http.ResponseWriter, r *http.Request) {
 	}
 	if s.opts.Platform == "windows" {
 		b = windowsTexts(b)
+	} else if s.opts.Platform == "android" {
+		b = androidTexts(b)
 	}
 	w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-store")
@@ -649,7 +662,8 @@ func (s *Server) backup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.backupMu.Lock()
-	p, err := s.makeZip("", "NOCTURNE_"+time.Now().Format("2006-01-02_15-04-05")+".zip", true)
+	// ?music=0: archive for moving the library to another device, without music.
+	p, err := s.makeZip("", "NOCTURNE_"+time.Now().Format("2006-01-02_15-04-05")+".zip", r.URL.Query().Get("music") != "0")
 	s.backupMu.Unlock()
 	if err != nil {
 		s.logf("backup: %v", err)
@@ -722,6 +736,23 @@ func (s *Server) restore(w http.ResponseWriter, r *http.Request) {
 	if err != nil || !validLibrary(libData) {
 		jsonErr(w, 400, "В архиве нет корректного library.json")
 		return
+	}
+	hasMusic := false
+	for _, f := range zr.File {
+		name := strings.ReplaceAll(f.Name, "\\", "/")
+		if strings.HasPrefix(name, root+musicFolder+"/") && !strings.HasSuffix(name, "/") {
+			hasMusic = true
+			break
+		}
+	}
+	if !hasMusic {
+		// An archive without music (moving between devices): this device keeps
+		// its own music list and screen settings.
+		if cur, err := os.ReadFile(s.libraryPath()); err == nil {
+			if merged, ok := keepDeviceSettings(libData, cur); ok {
+				libData = merged
+			}
+		}
 	}
 	type item struct {
 		f   *zip.File
@@ -1042,7 +1073,12 @@ func (s *Server) nativeBackup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.backupMu.Lock()
-	p, err := s.makeZip(DownloadsDir(), "NOCTURNE_полный_архив_"+time.Now().Format("2006-01-02_15-04-05")+".zip", true)
+	withMusic := r.URL.Query().Get("music") != "0"
+	prefix := "NOCTURNE_полный_архив_"
+	if !withMusic {
+		prefix = "NOCTURNE_перенос_"
+	}
+	p, err := s.makeZip(DownloadsDir(), prefix+time.Now().Format("2006-01-02_15-04-05")+".zip", withMusic)
 	s.backupMu.Unlock()
 	if err != nil {
 		s.logf("native backup: %v", err)

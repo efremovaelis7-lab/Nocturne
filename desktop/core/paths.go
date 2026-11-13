@@ -8,7 +8,7 @@ import (
 )
 
 // Version is reported by /api/settings and /api/ping.
-const Version = "1.0 RC3.8.20 beta"
+const Version = "1.0 RC3.8.21 beta"
 
 const (
 	libraryFile   = "library.json"
