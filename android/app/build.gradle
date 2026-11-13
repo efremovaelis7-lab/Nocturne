@@ -23,9 +23,10 @@ android {
         if (keystoreFile) {
             release {
                 storeFile file(keystoreFile)
+                storeType 'PKCS12'
                 storePassword System.getenv('NOCTURNE_KEYSTORE_PASSWORD')
-                keyAlias System.getenv('NOCTURNE_KEY_ALIAS')
-                keyPassword System.getenv('NOCTURNE_KEY_PASSWORD')
+                keyAlias System.getenv('NOCTURNE_KEY_ALIAS') ?: 'nocturne'
+                keyPassword System.getenv('NOCTURNE_KEY_PASSWORD') ?: System.getenv('NOCTURNE_KEYSTORE_PASSWORD')
             }
         }
     }

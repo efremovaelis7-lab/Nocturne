@@ -50,8 +50,8 @@ jobs:
           KEYSTORE_B64: ${{ secrets.NOCTURNE_KEYSTORE_B64 }}
         run: |
           if [ -n "$KEYSTORE_B64" ]; then
-            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/nocturne.jks"
-            echo "NOCTURNE_KEYSTORE_FILE=$RUNNER_TEMP/nocturne.jks" >> "$GITHUB_ENV"
+            echo "$KEYSTORE_B64" | tr -d ' \r\n' | base64 -d > "$RUNNER_TEMP/nocturne.p12"
+            echo "NOCTURNE_KEYSTORE_FILE=$RUNNER_TEMP/nocturne.p12" >> "$GITHUB_ENV"
             echo "SIGNED=permanent" >> "$GITHUB_ENV"
             echo "Подпись: постоянный ключ" | tee -a "$RUNNER_TEMP/build.log"
           else
@@ -75,6 +75,9 @@ jobs:
           rc=$(echo "$ver" | grep -o 'RC[0-9.]*' || echo test)
           cp app/build/outputs/apk/release/app-release.apk "../out/NOCTURNE_Android_${rc}_build${{ github.run_number }}.apk"
           ls -la ../out
+          # which key signed it (the permanent key: SHA-256 8B:1E:95:7F:…:83:B9)
+          bt=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          "$bt/apksigner" verify --print-certs ../out/*.apk 2>&1 | grep -E "Signer|SHA-256|DN" | tee -a "$RUNNER_TEMP/build.log"
 
       - name: Release page
         env:
