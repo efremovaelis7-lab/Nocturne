@@ -1,0 +1,102 @@
+/home/runner/work/Nocturne/Nocturne/android/app/src/main/assets/www:
+total 2656
+drwxr-xr-x 2 runner runner    4096 Nov 13 17:32 .
+drwxr-xr-x 3 runner runner    4096 Nov 13 17:32 ..
+-rw-r--r-- 1 runner runner 2384721 Nov 13 17:32 app.js
+-rw-r--r-- 1 runner runner  319778 Nov 13 17:32 index.html
+
+/home/runner/work/Nocturne/Nocturne/android/app/src/main/jniLibs/arm64-v8a:
+total 7820
+drwxr-xr-x 2 runner runner    4096 Nov 13 17:32 .
+drwxr-xr-x 5 runner runner    4096 Nov 13 17:32 ..
+-rwxr-xr-x 1 runner runner 7995709 Nov 13 17:32 libnocturne.so
+
+/home/runner/work/Nocturne/Nocturne/android/app/src/main/jniLibs/armeabi-v7a:
+total 7244
+drwxr-xr-x 2 runner runner    4096 Nov 13 17:32 .
+drwxr-xr-x 5 runner runner    4096 Nov 13 17:32 ..
+-rwxr-xr-x 1 runner runner 7405716 Nov 13 17:32 libnocturne.so
+
+/home/runner/work/Nocturne/Nocturne/android/app/src/main/jniLibs/x86_64:
+total 7444
+drwxr-xr-x 2 runner runner    4096 Nov 13 17:32 .
+drwxr-xr-x 5 runner runner    4096 Nov 13 17:32 ..
+-rwxr-xr-x 1 runner runner 7610516 Nov 13 17:32 libnocturne.so
+Подпись: постоянный ключ
+Файл ключа: 4316 байт (ожидается 4316); пароль в секрете: 33 знаков, без пробелов и переводов строк 32 (ожидается 32)
+Пароль подходит к ключу
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:checkReleaseAarMetadata
+> Task :app:generateReleaseResValues
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:generateReleaseResources
+> Task :app:mergeReleaseNativeLibs
+> Task :app:javaPreCompileRelease
+> Task :app:mergeReleaseResources
+> Task :app:packageReleaseResources
+> Task :app:stripReleaseDebugSymbols
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:extractDeepLinksRelease
+> Task :app:parseReleaseLocalResources
+
+> Task :app:processReleaseMainManifest
+/home/runner/work/Nocturne/Nocturne/android/app/src/main/AndroidManifest.xml:15:9-41 Warning:
+	android:extractNativeLibs should not be specified in this source AndroidManifest.xml file. See https://d.android.com/guide/topics/manifest/application-element#extractNativeLibs for more information.
+The AGP Upgrade Assistant can remove the attribute from the AndroidManifest.xml file and update the build file accordingly. See https://d.android.com/studio/build/agp-upgrade-assistant for more information.
+
+> Task :app:processReleaseManifest
+> Task :app:desugarReleaseFileDependencies
+> Task :app:mergeReleaseStartupProfile
+> Task :app:processReleaseManifestForPackage
+> Task :app:mergeReleaseArtProfile
+> Task :app:mergeExtDexRelease
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:processReleaseResources
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:compressReleaseAssets
+
+> Task :app:compileReleaseJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:dexBuilderRelease
+> Task :app:processReleaseJavaRes NO-SOURCE
+> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:collectReleaseDependencies
+> Task :app:mergeReleaseJavaResource
+> Task :app:mergeDexRelease
+> Task :app:sdkReleaseDependencyData
+> Task :app:compileReleaseArtProfile
+> Task :app:validateSigningRelease
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:optimizeReleaseResources
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1794591182525.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/Nocturne/Nocturne/android/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 16s
+41 actionable tasks: 41 executed
+V2 Signer: certificate DN: CN=NOCTURNE, O=Elizaveta Levinskaya, C=RU
+V2 Signer: certificate SHA-256 digest: 8b1e957fdd2dd78c20f75ad72a110356d19259ac8c4d49c34db94d8fe9bf83b9
+V2 Signer: certificate SHA-1 digest: 2eb5c99fb91d34b0e8d07d193e83ffd5b512dda3
+V2 Signer: certificate MD5 digest: 913caf25fe63742222b2bf2f137231e1
